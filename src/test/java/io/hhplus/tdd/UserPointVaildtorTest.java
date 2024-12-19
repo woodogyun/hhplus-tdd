@@ -3,6 +3,7 @@ package io.hhplus.tdd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -19,7 +20,8 @@ public class UserPointVaildtorTest {
     }
 
     @Test
-    public void testValidate_NegativePoint() {
+    @DisplayName("유저 포인트 음수 체크")
+    public void 유저_포인트_음수_체크() {
         final long updateMillis = 1L;
         UserPoint userPoint = new UserPoint(1, -10, updateMillis);
         BindingResult bindingResult = new DataBinder(userPoint).getBindingResult();
@@ -34,7 +36,8 @@ public class UserPointVaildtorTest {
     }
 
     @Test
-    public void testValidate_NegativeId() {
+    @DisplayName("유저 포인트 음수 체크")
+    public void 유저_아이디_음수_체크() {
         final long updateMillis = 1L;
         UserPoint userPoint = new UserPoint(-1, 10, updateMillis);
         BindingResult bindingResult = new DataBinder(userPoint).getBindingResult();
@@ -49,7 +52,8 @@ public class UserPointVaildtorTest {
     }
 
     @Test
-    public void testValidate_ValidUserPoint() {
+    @DisplayName("유저 검증 체크")
+    public void 유저_검증_체크() {
         final long updateMillis = 1L;
         UserPoint userPoint = new UserPoint(1, 10, updateMillis);
         BindingResult bindingResult = new DataBinder(userPoint).getBindingResult();
