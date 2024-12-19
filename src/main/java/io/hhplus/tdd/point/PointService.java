@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.manager.LockManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 public class PointService {
     private final UserPointTable userPointTable;
     private final PointHistoryTable pointHistoryTable;
+    private final LockManager lockManager;
     // private final UserPointValidator userPointValidator;
     // private final UserHistoryValidator userHistoryValidator;
 
@@ -21,16 +23,28 @@ public class PointService {
     }
 
     public UserPoint charge(long id, long amount) {
-        UserPoint userPoint = userPointTable.selectById(id);
-        UserPoint chargeUserPoint = userPointTable.insertOrUpdate(id, amount + userPoint.point());
-        pointHistoryTable.insert(id, chargeUserPoint.point(), TransactionType.CHARGE, System.currentTimeMillis());
-        return chargeUserPoint;
+        lockManager.lock(id);
+        UserPoint chargedUserPoint;
+        try {
+            UserPoint userPoint = userPointTable.selectById(id);
+            chargedUserPoint = userPointTable.insertOrUpdate(id, userPoint.point() + amount);
+            pointHistoryTable.insert(id, amount, TransactionType.CHARGE, System.currentTimeMillis());
+        } finally {
+            lockManager.unlock(id);
+        }
+        return chargedUserPoint;
     }
 
     public UserPoint use(long id, long amount) {
+        lockManager.lock(id);
         UserPoint userPoint = userPointTable.selectById(id);
-        UserPoint useUserPoint = userPointTable.insertOrUpdate(id, userPoint.point() - amount);
-        pointHistoryTable.insert(id, useUserPoint.point(), TransactionType.USE, System.currentTimeMillis());
+        UserPoint useUserPoint;
+        try {
+            useUserPoint = userPointTable.insertOrUpdate(id, userPoint.point() - amount);
+            pointHistoryTable.insert(id, amount, TransactionType.USE, System.currentTimeMillis());
+        } finally {
+            lockManager.unlock(id);
+        }
         return useUserPoint;
     }
 
