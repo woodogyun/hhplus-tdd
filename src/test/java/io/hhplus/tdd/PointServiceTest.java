@@ -1,6 +1,7 @@
 package io.hhplus.tdd;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.manager.LockManager;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.PointService;
 import io.hhplus.tdd.point.TransactionType;
@@ -22,6 +23,8 @@ public class PointServiceTest {
     private UserPointTable userPointTable;
     @Mock
     private PointHistoryTable pointHistoryTable;
+    @Mock
+    private LockManager lockManager;
     
     @Test
     @DisplayName("id로 포인트 조회")
