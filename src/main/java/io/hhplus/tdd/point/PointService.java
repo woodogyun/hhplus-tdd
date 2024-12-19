@@ -13,7 +13,7 @@ public class PointService {
         return userPointTable.selectById(id);
     }
     public List<PointHistory> selectAllByUserId(long id) {
-        return List.of();
+        return pointHistoryTable.selectAllByUserId(id);
     }
     public UserPoint charge(long id, long amount) {
         return new UserPoint(0, 0, 0);
