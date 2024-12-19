@@ -94,5 +94,27 @@ public class PointServiceTest {
         assertEquals(userHistories.get(1).type(), returnPointHistories.get(1).type());
         assertEquals(userHistories.get(1).updateMillis(), returnPointHistories.get(1).updateMillis());
     }
+
+    @Test
+    @DisplayName("포인트 충전")
+    void 포인트_충전() {
+        long id = 1L;
+        long amount = 1000L;
+        long chargeAmount = 500L;
+        long beforeUpdateMillis = 0L;
+        long afterUpdateMillis = 10L;
+
+        UserPoint beforeUserPoint = new UserPoint(id, amount, beforeUpdateMillis);
+        UserPoint chargedUserPoint = new UserPoint(id, amount + chargeAmount, afterUpdateMillis);
+
+        doReturn(beforeUserPoint).when(userPointTable).selectById(id);
+        doReturn(chargedUserPoint).when(userPointTable).insertOrUpdate(id, amount + chargeAmount);
+
+        UserPoint returnUserPoint = pointService.charge(id, chargeAmount);
+
+        assertEquals(returnUserPoint.id(), chargedUserPoint.id());
+        assertEquals(returnUserPoint.point(), chargedUserPoint.point());
+        assertEquals(returnUserPoint.updateMillis(), chargedUserPoint.updateMillis());
+    }
     
 }
