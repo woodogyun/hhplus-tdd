@@ -117,4 +117,24 @@ public class PointServiceTest {
         assertEquals(returnUserPoint.updateMillis(), chargedUserPoint.updateMillis());
     }
     
+    @Test
+    @DisplayName("포인트 충전 시 내역이 저장된다.")
+    void 포인트_충전_시_내역_저장() {
+        long id = 1L;
+        long chargeAmount = 1000L;
+
+        PointHistory pointHistory = new PointHistory(1L, id, chargeAmount, TransactionType.CHARGE, System.currentTimeMillis());
+        List<PointHistory> userHistories = List.of(pointHistory);
+
+        doReturn(userHistories).when(pointHistoryTable).selectAllByUserId(id);
+
+        List<PointHistory> returnPointHistories = pointService.selectAllByUserId(1L);
+
+        assertEquals(1, returnPointHistories.size());
+        assertEquals(pointHistory.id(), returnPointHistories.get(0).id());
+        assertEquals(pointHistory.userId(), returnPointHistories.get(0).userId());
+        assertEquals(pointHistory.amount(), returnPointHistories.get(0).amount());
+        assertEquals(pointHistory.type(), returnPointHistories.get(0).type());
+        assertEquals(pointHistory.updateMillis(), returnPointHistories.get(0).updateMillis());
+    }
 }
