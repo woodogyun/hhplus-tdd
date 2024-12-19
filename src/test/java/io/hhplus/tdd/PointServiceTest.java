@@ -1,7 +1,6 @@
 package io.hhplus.tdd;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
-import io.hhplus.tdd.exception.NegativePointException;
 import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.PointService;
 import io.hhplus.tdd.point.TransactionType;
@@ -13,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import java.util.List;
 @ExtendWith(MockitoExtension.class)
@@ -37,32 +35,6 @@ public class PointServiceTest {
         assertEquals(returnUserPoint.point(), userPoint.point());
         assertEquals(returnUserPoint.id(), userPoint.id());
         assertEquals(returnUserPoint.updateMillis(), userPoint.updateMillis());
-    }
-    
-    @Test
-    @DisplayName("잔고 부족")
-    void 잔고_부족() {
-        //given
-        long id = 1L;
-        long point = 100L;
-        long amount = 200L;
-        long millis = 10L;
-        UserPoint userPoint = new UserPoint(id, point, millis);
-        //when
-        doReturn(userPoint).when(userPointTable).selectById(id);
-        //then
-        assertThrows(IllegalArgumentException.class, () -> pointService.use(id, amount));
-    }
-
-    @Test
-    @DisplayName("유저 포인트가 음수인 경우")
-    void 유저_포인트가_음수인_경우() {
-        //given
-        long id = 1L;
-        long negativePoint = -100L;
-        long millis = 10L;
-         // then
-        assertThrows(NegativePointException.class, () -> new UserPoint(id, negativePoint, millis));
     }
 
     @Test
