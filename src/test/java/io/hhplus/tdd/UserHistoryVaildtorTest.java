@@ -12,6 +12,7 @@ import io.hhplus.tdd.point.PointHistory;
 import io.hhplus.tdd.point.TransactionType;
 import io.hhplus.tdd.vaildation.UserHistoryValidator;
 
+@Deprecated
 public class UserHistoryVaildtorTest {
     private UserHistoryValidator userHistoryValidator;
 

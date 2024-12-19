@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import io.hhplus.tdd.point.UserPoint;
 import io.hhplus.tdd.vaildation.UserPointValidator;
 
+@Deprecated
 public class UserPointVaildtorTest {
     private UserPointValidator userPointValidator;
 

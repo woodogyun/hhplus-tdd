@@ -5,6 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import io.hhplus.tdd.point.UserPoint;
 
+@Deprecated
 @Component
 public class UserPointValidator implements Validator{
     
