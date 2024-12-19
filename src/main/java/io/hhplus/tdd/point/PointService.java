@@ -1,6 +1,7 @@
 package io.hhplus.tdd.point;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.exception.NegativePointException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -16,7 +17,10 @@ public class PointService {
         return pointHistoryTable.selectAllByUserId(id);
     }
     public UserPoint charge(long id, long amount) {
-        return new UserPoint(0, 0, 0);
+        UserPoint userPoint = userPointTable.selectById(id);
+        UserPoint chargeUserPoint = userPointTable.insertOrUpdate(id, amount + userPoint.point());
+        pointHistoryTable.insert(id, chargeUserPoint.point(), TransactionType.CHARGE, System.currentTimeMillis());
+        return chargeUserPoint;
     }
     public UserPoint use(long id, long amount) {
         return new UserPoint(0, 0, 0);
