@@ -89,6 +89,28 @@ public class PointServiceTest {
         assertEquals(returnUserPoint.point(), chargedUserPoint.point());
         assertEquals(returnUserPoint.updateMillis(), chargedUserPoint.updateMillis());
     }
+
+    @Test
+    @DisplayName("포인트 사용")
+    void 포인트_사용() {
+        final long id = 1L;
+        final long point = 1000L;
+        final long useAmount = 500L;
+        final long beforeUpdateMillis = 0L;
+        final long afterUpdateMillis = 0L;
+
+        UserPoint beforeUserPoint = new UserPoint(id, point, beforeUpdateMillis);
+        UserPoint chargedUserPoint = new UserPoint(id, point - useAmount, afterUpdateMillis);
+
+        doReturn(beforeUserPoint).when(userPointTable).selectById(id);
+        doReturn(chargedUserPoint).when(userPointTable).insertOrUpdate(id, point - useAmount);
+
+        UserPoint returnUserPoint = pointService.use(id, useAmount);
+
+        assertEquals(returnUserPoint.id(), chargedUserPoint.id());
+        assertEquals(returnUserPoint.point(), chargedUserPoint.point());
+        assertEquals(returnUserPoint.updateMillis(), chargedUserPoint.updateMillis());
+    }
     
     @Test
     @DisplayName("포인트 충전 시 내역이 저장된다.")
