@@ -44,13 +44,14 @@ public class PointServiceTest {
     void 잔고_부족() {
         //given
         long id = 1L;
-        long amount = 100L;
+        long point = 100L;
+        long amount = 200L;
         long millis = 10L;
-        UserPoint userPoint = new UserPoint(id, amount, millis);
+        UserPoint userPoint = new UserPoint(id, point, millis);
         //when
         doReturn(userPoint).when(userPointTable).selectById(id);
         //then
-        assertThrows(IllegalArgumentException.class, () -> pointService.use(id, amount + 1L));
+        assertThrows(IllegalArgumentException.class, () -> pointService.use(id, amount));
     }
 
     @Test
